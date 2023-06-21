@@ -166,14 +166,54 @@ document.addEventListener "keyup" do |e|
   end
 end
 
+def draw_keyboard
+  width = 1600
+  height = 200
+
+  key_w = 50
+  bkey_w = 13
+  bkey_h = 120
+  svg = Victor::SVG.new
+  svg.setup width: width + 2, height: height + 2
+
+  # 白鍵
+  0.upto(16) do |i|
+    svg.rect x: i * key_w + 1, y: 1, width: key_w, height: height, stroke: "black", fill: "transparent"
+  end
+
+  # 黒鍵
+  0.upto(16) do |i|
+    next if [0, 3].include?(i % 7)
+    svg.rect x: i * key_w - bkey_w+ 1, y: 1, width: bkey_w * 2, height: bkey_h, stroke: "black", fill: "black"
+  end
+
+  # キー対応表
+  oct = [0, 1, 0, 1, 0, 0, 1, 0, 1, 0, 1, 0]
+  pos_x = 21
+  KEYS.each_with_index do |key, i|
+
+    case oct[i % oct.length]
+    when 0 # 白鍵
+      svg.text key, x: pos_x , y: 170
+      pos_x += key_w / 2.0 if oct[i.succ % oct.length] == 0
+    when 1 # 黒鍵
+      svg.text key, x: pos_x , y: 100, fill: "white"
+    end
+    pos_x += key_w/2.0
+  end
+
+  document.getElementById("keyboard")[:innerHTML] = svg.render
+end
+
 
 def onload
   unless $completed_load_assets
-    JS.global.setTimeout( -> { onload }, 1000)
+    JS.global.setTimeout( -> { onload }, 500)
     return
   end
 
   generate_wave
+  draw_keyboard
 end
 
 onload
