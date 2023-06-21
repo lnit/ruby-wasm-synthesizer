@@ -1,6 +1,8 @@
 require 'fileutils'
 require 'js'
 
+$completed_load_assets = false
+
 def write_file(path)
   dirname = File.dirname(path)
   unless File.directory?(dirname)
@@ -20,3 +22,5 @@ list = %w(
 list.each do
   write_file(_1)
 end
+
+$completed_load_assets = true

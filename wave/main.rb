@@ -1,8 +1,14 @@
 SAMPLE_RATE = 44100
 
 require "js"
-window = JS.global[:window]
-document = JS.global[:document]
+
+def window
+  @window ||= JS.global[:window]
+end
+
+def document
+  @document ||= JS.global[:document]
+end
 
 def ctx
   return @ctx if defined?(@ctx)
@@ -76,8 +82,7 @@ def draw_wave(samples)
 end
 
 # 基準波形の生成(A=442Hz)
-gen_btn = document.getElementById "gen"
-gen_btn.addEventListener "click" do |e|
+def generate_wave
   textarea = document.getElementById "script-wave"
   eval(textarea[:value].to_s)
 
@@ -91,6 +96,10 @@ gen_btn.addEventListener "click" do |e|
   end
 
   draw_wave(samples)
+end
+gen_btn = document.getElementById "gen"
+gen_btn.addEventListener "click" do |e|
+  generate_wave
 end
 
 # テスト再生
@@ -158,4 +167,13 @@ document.addEventListener "keyup" do |e|
 end
 
 
-puts "Hello, world!"
+def onload
+  unless $completed_load_assets
+    JS.global.setTimeout( -> { onload }, 1000)
+    return
+  end
+
+  generate_wave
+end
+
+onload
