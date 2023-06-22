@@ -212,6 +212,8 @@ def onload
     return
   end
 
+  document.getElementById("loading")[:classList].add("hidden")
+  document.getElementById("ctl-panel")[:classList].remove("hidden")
   generate_wave
   draw_keyboard
 end

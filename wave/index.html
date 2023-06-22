@@ -1,13 +1,20 @@
 <html>
   <head>
     <meta charset="utf-8"/>
+    <title>Ruby Wasm Synthesizer</title>
     <script src="https://cdn.jsdelivr.net/npm/ruby-head-wasm-wasi@next/dist/browser.script.iife.js"></script>
     <script type="text/ruby"  src="fetch_assets.rb" data-eval="async"></script>
     <script type="text/ruby" src="victor.rb" data-eval="async"></script>
     <script type="text/ruby" src="main.rb"></script>
+    <style>
+      .hidden {
+        display: none;
+      }
+    </style>
   </head>
-  <body style="margin: 2rem;">
-    <textarea id="script-wave" rows="20" style="width: 600px;">
+  <body style="margin: 1rem;">
+    波形を生成するコード <br>
+    <textarea id="script-wave" rows="20" style="width: 800px;">
 def generate_sample_data(num_samples, frequency, max_amplitude)
   position_in_period = 0.0
   position_in_period_delta = frequency / SAMPLE_RATE
@@ -15,9 +22,16 @@ def generate_sample_data(num_samples, frequency, max_amplitude)
   samples = [].fill(0.0, 0, num_samples)
 
   num_samples.times do |i|
+    # 矩形波
     samples[i] += ((position_in_period >= 0.5) ? max_amplitude : -max_amplitude) * 1.0
+
+    # 正弦波
     # samples[i] += (Math::sin(position_in_period * TWO_PI) * max_amplitude) * 1.0
+
+    # ノコギリ波
     # samples[i] += (((position_in_period * 2.0) - 1.0) * max_amplitude) * 1.0
+
+    # 三角波
     # samples[i] += (max_amplitude - (((position_in_period * 2.0) - 1.0) * max_amplitude * 2.0).abs) * 1.0
 
     position_in_period += position_in_period_delta
@@ -32,11 +46,15 @@ def generate_sample_data(num_samples, frequency, max_amplitude)
 end
     </textarea>
     <br>
-    <input type="button" id="gen" value="Generate"></input>
-    <input type="button" id="play" value="Test"></input>
-    <br>
-    <svg id="plot-wave" width="441" height="320"></svg>
-    <br>
-    <div id="keyboard" ></svg>
+    <p id="loading">Loading...</p>
+    <div id="ctl-panel" class="hidden">
+      <input type="button" id="gen" value="Rubyコードから波形を生成"></input>
+      <input type="button" id="play" value="テスト音声を再生 ♪"></input>
+
+      <p>生成された波形</p>
+      <div id="plot-wave" width="441" height="320"></div>
+      <p>簡易鍵盤</p>
+      <div id="keyboard" ></div>
+    </div>
   </body>
 </html>
