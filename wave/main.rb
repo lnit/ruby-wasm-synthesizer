@@ -167,7 +167,7 @@ document.addEventListener "keyup" do |e|
 end
 
 def draw_keyboard
-  width = 1600
+  width = 1200
   height = 200
 
   key_w = 50
