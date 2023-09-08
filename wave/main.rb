@@ -13,7 +13,8 @@ end
 def ctx
   return @ctx if defined?(@ctx)
 
-  @ctx = JS.eval('return new AudioContext')
+  #@ctx = JS.eval('return new AudioContext')
+  @ctx = JS.global[:AudioContext].new
   @ctx[:sampleRate] = SAMPLE_RATE
 
   @ctx
