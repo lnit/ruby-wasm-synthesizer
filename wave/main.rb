@@ -137,9 +137,11 @@ end
 @keydown_state = {}
 @keydown_gain = {}
 document.addEventListener "keydown" do |e|
+  editing = document.getElementById("script-wave") === document[:activeElement]
+
   key = e[:key].to_s
 
-  if KEYS.include?(key) && !@keydown_state[key]
+  if KEYS.include?(key) && !@keydown_state[key] && !editing
     @keydown_state[key] = true
     src = ctx.createBufferSource()
     src[:buffer] = @buf
@@ -161,7 +163,7 @@ end
 document.addEventListener "keyup" do |e|
   key = e[:key].to_s
 
-  if KEYS.include?(key)
+  if KEYS.include?(key) && @keydown_state[key]
     @keydown_state[key] = false
     gain_node = @keydown_gain.delete(key)
     gain_node[:gain].linearRampToValueAtTime(0, ctx[:currentTime].to_i + 1.5)
