@@ -80,6 +80,7 @@ def draw_wave(samples)
 
   document ||= JS.global[:document]
   document.getElementById("plot-wave")[:innerHTML] = svg.render
+  document.getElementById("view-panel")[:classList].remove("hidden")
 end
 
 # 基準波形の生成(A=442Hz)
@@ -215,7 +216,7 @@ def onload
 
   document.getElementById("loading")[:classList].add("hidden")
   document.getElementById("ctl-panel")[:classList].remove("hidden")
-  generate_wave
+  # generate_wave
   draw_keyboard
 end
 
